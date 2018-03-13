@@ -64,8 +64,8 @@ class Game #:nodoc:
   end
 
   def move(number, turn)
-    return @arr2[number] << ['x'] unless (turn % 2).zero?
-    @arr2[number] << ['o']
+      return @arr2[number] << ['x'] unless (turn % 2).zero?
+      @arr2[number] << ['o']
   end
 
   def current_player_win?
@@ -87,17 +87,25 @@ end
 
 game = Game.new
 turn = 0
+arr = [0,0,0,0,0,0,0]
 loop do
   if (turn % 2).zero?
-    puts 'The second player makes a move'
+    puts 'Second player makes a move'
   else
-    puts 'The first player makes a move'
+    puts 'First player makes a move'
   end
-  puts 'Enter the number of the column(from 1 to 7)'
+  puts 'Enter number of the column(from 1 to 7)'
   number = gets.to_i
   if number < 1 || number > 7
     puts 'Enter a valid number'
     redo
+  else
+    if arr[number] == 6
+      puts 'Column is full, select another column'
+      redo
+    else
+      arr[number] += 1
+    end
   end
   turn += 1
   if turn == 43
