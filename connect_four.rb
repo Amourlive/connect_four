@@ -5,7 +5,7 @@ class Game #:nodoc:
     @player_win = 0
     @switch = 0
     @switch_diagonal = 0
-    # Sets the minimum size constraint on the matrix generator
+    # Sets the matrix size constraint
     @limitation_value_min = 3
     @limitation_value_max = 100
   end
