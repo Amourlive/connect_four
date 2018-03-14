@@ -3,6 +3,9 @@ class Game #:nodoc:
     @arr2 = []
     @step = 0
     @player_win = 0
+    @matrix_length = 0
+    @matrix_height = 0
+    @chips_to_win = 0
     @side_matrix_length = 3
     # Sets the minimum size constraint on the matrix generator
     # and chips connect to win
@@ -10,19 +13,23 @@ class Game #:nodoc:
   end
 
   def generate_game
+    puts "Enter the width of the matrix (number => #{@limitation_value})"
+    write_params @matrix_length, @limitation_value
+    puts "Enter the height of the matrix (number => #{@limitation_value})"
+    write_params @matrix_height, @limitation_value
+    puts "Enter the number of connected chips to win (number => #{@limitation_value})"
+    write_params @chips_to_win, @limitation_value
+    end
+  end
+
+  def write_params(params, valid)
     loop do
-      puts "Enter the width of the matrix (number => #{@limitation_value})"
       number = gets.to_i
-      redo if number < @limitation_value
-      @matrix_length = number
-      puts "Enter the height of the matrix (number => #{@limitation_value})"
-      number = gets.to_i
-      redo if number < @limitation_value
-      @matrix_height = number
-      puts "Enter the number of connected chips to win (number => #{@limitation_value})"
-      number = gets.to_i
-      redo if number < @limitation_value
-      @chips_to_win = number
+      if number < valid
+        puts "Enter valid number (number => #{@limitation_value})"
+        redo
+      end
+      params = number
       break
     end
   end
