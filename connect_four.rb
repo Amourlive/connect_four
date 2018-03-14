@@ -4,7 +4,6 @@ class Game #:nodoc:
     @step = 1
     @switch = 0
     @switch_diagonal = 0
-    @arr = []
     # Sets the matrix size constraint
     @limitation_value_min = 3
     @limitation_value_max = 100
@@ -105,7 +104,7 @@ class Game #:nodoc:
         (0..@matrix_height).each { |key2| @matrix[key][key2] = 'z' }
       end
     end
-    (0..@matrix_width).each { |key| @arr[key] = 0 }
+    @arr = Array.new(@matrix_width, 0)
   end
 
   # checks if there is a necessary amount of chips inside the array
