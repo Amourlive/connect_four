@@ -22,9 +22,9 @@ class Game #:nodoc:
     end
   end
 
-  def filling_of_emptiness(arr, filler)
-    return filler if arr.nil?
-    arr
+  def empty?(arr)
+    return true if arr.nil?
+    false
   end
 
   def horizontal
