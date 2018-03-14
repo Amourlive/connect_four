@@ -36,7 +36,9 @@ class Game #:nodoc:
 
   def horizontal
     (3..9).each do |key|
-      win @arr2[key] if @arr2[key].length > 3
+      if @arr2[key].length > 3
+        break if include_chip? @arr2[key]
+      end
     end
   end
 
@@ -44,7 +46,7 @@ class Game #:nodoc:
     (3..9).each do |key|
       row = []
       (3..9).each { |key2| row << fill_cell(@arr2[key2][key], 'z') }
-      win row
+      break if include_chip? row
     end
   end
 
@@ -55,7 +57,7 @@ class Game #:nodoc:
         key2 = index + key
         diagonal << fill_cell(@arr2[key2][key], 'z')
       end
-      win diagonal
+      break if include_chip? diagonal
     end
   end
 
@@ -66,7 +68,7 @@ class Game #:nodoc:
         key2 = index - key
         diagonal << fill_cell(@arr2[key2][key], 'z')
       end
-      win diagonal
+      break if include_chip? diagonal
     end
   end
 
