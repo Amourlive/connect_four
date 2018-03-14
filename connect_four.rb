@@ -184,8 +184,7 @@ class Game #:nodoc:
   end
 
   def current_player_win?
-    return true if win_by_horizontal? || win_by_vertical? || win_by_diagonal?
-    false
+    win_by_horizontal? || win_by_vertical? || win_by_diagonal?
   end
 
   # show matrix for user
