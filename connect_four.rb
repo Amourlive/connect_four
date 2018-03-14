@@ -34,7 +34,7 @@ class Game #:nodoc:
     cell
   end
 
-  def horizontal
+  def validation_horizontal?
     (3..9).each do |key|
       if @arr2[key].length > 3
         break if include_chip? @arr2[key]
@@ -42,7 +42,7 @@ class Game #:nodoc:
     end
   end
 
-  def vertical
+  def validation_vertical?
     (3..9).each do |key|
       row = []
       (3..9).each { |key2| row << fill_cell(@arr2[key2][key], 'z') }
@@ -50,26 +50,28 @@ class Game #:nodoc:
     end
   end
 
-  def diagonal_left(range, n)
+  def validation_diagonal_left?(range, inspection_height)
     range.each do |index|
       diagonal = []
-      (0..n).each do |key|
+      (0..inspection_height).each do |key|
         key2 = index + key
         diagonal << fill_cell(@arr2[key2][key], 'z')
       end
-      break if include_chip? diagonal
+      return true if include_chip? diagonal
     end
+    false
   end
 
-  def diagonal_right(range, n)
+  def validation_diagonal_right?(range, inspection_height)
     range.to_a.reverse.each do |index|
       diagonal = []
-      (0..n).each do |key|
+      (0..inspection_height).each do |key|
         key2 = index - key
         diagonal << fill_cell(@arr2[key2][key], 'z')
       end
-      break if include_chip? diagonal
+      return true if include_chip? diagonal
     end
+    false
   end
 
   def move(number, turn)
