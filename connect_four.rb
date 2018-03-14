@@ -22,8 +22,8 @@ class Game #:nodoc:
     end
   end
 
-  def fill_cell(arr)
-    return 'z' if arr.nil?
+  def filling_of_emptiness(arr, filler)
+    return filler if arr.nil?
     arr
   end
 
@@ -36,7 +36,7 @@ class Game #:nodoc:
   def vertical
     (3..9).each do |key|
       row = []
-      (3..9).each { |key2| row << fill_cell(@arr2[key2][key]) }
+      (3..9).each { |key2| row << filling_of_emptiness(@arr2[key2][key], 'z') }
       win row
     end
   end
@@ -46,7 +46,7 @@ class Game #:nodoc:
       diagonal = []
       (0..n).each do |key|
         key2 = index + key
-        diagonal << fill_cell(@arr2[key2][key])
+        diagonal << filling_of_emptiness(@arr2[key2][key], 'z')
       end
       win diagonal
     end
@@ -57,15 +57,15 @@ class Game #:nodoc:
       diagonal = []
       (0..n).each do |key|
         key2 = index - key
-        diagonal << fill_cell(@arr2[key2][key])
+        diagonal << filling_of_emptiness(@arr2[key2][key], 'z')
       end
       win diagonal
     end
   end
 
   def move(number, turn)
-      return @arr2[number] << ['x'] unless (turn % 2).zero?
-      @arr2[number] << ['o']
+    return @arr2[number] << 'x' unless (turn % 2).zero?
+    @arr2[number] << 'o'
   end
 
   def current_player_win?
@@ -78,16 +78,17 @@ class Game #:nodoc:
   end
 
   def output_arr
-    (3..9).each do |key|
-      puts "Column #{key - 2}"
-      puts @arr2[key]
+    (0..5).to_a.reverse.each do |key|
+      print '|'
+      (3..9).each { |key2| print filling_of_emptiness(@arr2[key2][key], ' '), '|' }
+      print "\n"
     end
   end
 end
 
 game = Game.new
 turn = 0
-arr = [0,0,0,0,0,0,0]
+arr = [0, 0, 0, 0, 0, 0, 0]
 loop do
   if (turn % 2).zero?
     puts 'Second player makes a move'
@@ -100,11 +101,11 @@ loop do
     puts 'Enter a valid number'
     redo
   else
-    if arr[number] == 6
+    if arr[number - 1] == 6
       puts 'Column is full, select another column'
       redo
     else
-      arr[number] += 1
+      arr[number - 1] += 1
     end
   end
   turn += 1
