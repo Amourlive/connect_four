@@ -1,6 +1,5 @@
 class Game #:nodoc:
   def initialize
-    @matrix = []
     @step = 1
     @switch = 0
     @switch_diagonal = 0
@@ -94,15 +93,9 @@ class Game #:nodoc:
       @side_matrix_width = 0
     else
       @side_matrix_width -= 1
-      (0..@side_matrix_width).each do |key|
-        @matrix[key] = []
-        (0..@matrix_height).each { |key2| @matrix[key][key2] = 'z' }
-      end
+      arr_z = Array.new(@matrix_height, 'z')
+      @matrix = Array.new(@matrix_width + 2 * @side_matrix_width + 1, arr_z)
       (@side_matrix_width + 1..@side_matrix_width + @matrix_width).each { |key| @matrix[key] = [] }
-      (@side_matrix_width + @matrix_width + 1..@matrix_width + 2 * @side_matrix_width + 1).each do |key|
-        @matrix[key] = []
-        (0..@matrix_height).each { |key2| @matrix[key][key2] = 'z' }
-      end
     end
     @arr = Array.new(@matrix_width, 0)
     print @matrix
