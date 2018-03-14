@@ -9,6 +9,7 @@ class Game #:nodoc:
              ['z','z','z','z','z','z']]
     @value1 = 'xxxx'
     @value2 = 'oooo'
+    @turn = 0
     @player_win = 0
   end
 
@@ -76,14 +77,13 @@ class Game #:nodoc:
     false
   end
 
-  def move(number, turn)
-    return @arr2[number] << 'x' unless (turn % 2).zero?
+  def move(number)
+    return @arr2[number] << 'x' unless (@turn % 2).zero?
     @arr2[number] << 'o'
   end
 
   def current_player_win?
-    return true until @wo_won.empty?
-    false
+
   end
 
   def output_wo_win
