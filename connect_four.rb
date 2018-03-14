@@ -194,10 +194,13 @@ class Game #:nodoc:
     (0..@matrix_height - 1).to_a.reverse.each do |key|
       print '|'
       (@side_matrix_width..@matrix_width + @side_matrix_width - 1).each do |key2|
-        print fill_cell(@matrix[key2][key], ' '), '|'
+        print fill_cell(@matrix[key2][key], ' '), ' |'
       end
-      print "\n"
+      print "#{key}\n"
     end
+    print '|'
+    (0..@matrix_width).each { |value| print value, '|' }
+    print "\n"
   end
 end
 
