@@ -1,6 +1,6 @@
 class Game #:nodoc:
   def initialize
-    @arr2 = []
+    @matrix = []
     @step = 0
     @player_win = 0
     @switch = 0
@@ -25,8 +25,8 @@ class Game #:nodoc:
   end
 
   def move(number)
-    return @arr2[number] << 'x' unless (@step % 2).zero?
-    @arr2[number] << 'o'
+    return @matrix[number] << 'x' unless (@step % 2).zero?
+    @matrix[number] << 'o'
   end
 
   private
@@ -53,6 +53,16 @@ class Game #:nodoc:
     (0..@chips_to_win).each { |value| @switch_diagonal += value }
     # generate value for side matrix
     @side_matrix_width = @matrix_height - @chips_to_win
+    if @side_matrix_width < 0
+      @side_matrix_width = 0
+    elsif @side_matrix_width > 0
+      (0..@side_matrix_width - 1).each do |key|
+        (0..@matrix_height).each { |key2| @matrix[key][key2] << 'z' }
+      end
+      (@side_matrix_width + @matrix_width - 1..@matrix_width + 2 * @side_matrix_width - 1).each do |key|
+        (0..@matrix_height).each { |key2| @matrix[key][key2] << 'z' }
+      end
+    end
   end
 
   # checks if there is a necessary amount of chips inside the array
@@ -79,8 +89,8 @@ class Game #:nodoc:
   def validation_horizontal?
     if @step > @switch && @matrix_height >= @chips_to_win
       (@side_matrix_width..@matrix_width + @side_matrix_width).each do |key|
-        if @arr2[key].length >= @chips_to_win
-          return true if include_chip? @arr2[key]
+        if @matrix[key].length >= @chips_to_win
+          return true if include_chip? @matrix[key]
         end
       end
     end
@@ -93,7 +103,7 @@ class Game #:nodoc:
       (0..@matrix_height).each do |key|
         row = []
         (@side_matrix_width..@matrix_width + @side_matrix_width).each do |key2|
-          row << fill_cell(@arr2[key2][key], 'z')
+          row << fill_cell(@matrix[key2][key], 'z')
         end
         return true if include_chip? row
       end
@@ -115,7 +125,7 @@ class Game #:nodoc:
       diagonal = []
       (0..@matrix_height).each do |key|
         key2 = index + key
-        diagonal << fill_cell(@arr2[key2][key], 'z')
+        diagonal << fill_cell(@matrix[key2][key], 'z')
       end
       return true if include_chip? diagonal
     end
@@ -127,7 +137,7 @@ class Game #:nodoc:
       diagonal = []
       (0..@matrix_height).each do |key|
         key2 = index - key
-        diagonal << fill_cell(@arr2[key2][key], 'z')
+        diagonal << fill_cell(@matrix[key2][key], 'z')
       end
       return true if include_chip? diagonal
     end
@@ -139,7 +149,7 @@ class Game #:nodoc:
     (0..@matrix_height).to_a.reverse.each do |key|
       print '|'
       (@side_matrix_width..@matrix_width + @side_matrix_width).each do |key2|
-        print fill_cell(@arr2[key2][key], ' '), '|'
+        print fill_cell(@matrix[key2][key], ' '), '|'
       end
       print "\n"
     end
