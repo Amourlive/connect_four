@@ -7,10 +7,18 @@ class Game #:nodoc:
              ['z','z','z','z','z','z'],
              ['z','z','z','z','z','z'],
              ['z','z','z','z','z','z']]
-    @value1 = 'xxxx'
-    @value2 = 'oooo'
+    @value1 = 'x'
+    @value2 = 'o'
     @turn = 0
     @player_win = 0
+    @matrix_length = 7
+    @matrix_height = 6
+    @chips_to_win = 4
+  end
+
+  def generate_value
+    @value1 *= 4
+    @value2 *= 4
   end
 
   def include_chip?(arr)
@@ -36,19 +44,23 @@ class Game #:nodoc:
   end
 
   def validation_horizontal?
-    (3..9).each do |key|
-      if @arr2[key].length > 3
-        return true if include_chip? @arr2[key]
+    if @turn > 6
+      (3..9).each do |key|
+        if @arr2[key].length > 3
+          return true if include_chip? @arr2[key]
+        end
       end
     end
     false
   end
 
   def validation_vertical?
-    (3..9).each do |key|
-      row = []
-      (3..9).each { |key2| row << fill_cell(@arr2[key2][key], 'z') }
-      return true if include_chip? row
+    if @turn > 6
+      (3..9).each do |key|
+        row = []
+        (3..9).each { |key2| row << fill_cell(@arr2[key2][key], 'z') }
+        return true if include_chip? row
+      end
     end
     false
   end
@@ -83,7 +95,6 @@ class Game #:nodoc:
   end
 
   def current_player_win?
-
   end
 
   def output_wo_win
