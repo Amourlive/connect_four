@@ -3,42 +3,51 @@ class Game #:nodoc:
     @arr2 = []
     @step = 0
     @player_win = 0
-    @matrix_length = 0
-    @matrix_height = 0
-    @chips_to_win = 0
-    @side_matrix_length = 3
+    @switch = 0
+    @switch_diagonal = 0
     # Sets the minimum size constraint on the matrix generator
-    # and chips connect to win
-    @limitation_value = 3
+    @limitation_value_min = 3
+    @limitation_value_max = 100
   end
 
+  # sets the conditions for the game, matrix size, validation conditions
   def generate_game
-    puts "Enter the width of the matrix (number => #{@limitation_value})"
-    write_params @matrix_length, @limitation_value
-    puts "Enter the height of the matrix (number => #{@limitation_value})"
-    write_params @matrix_height, @limitation_value
-    puts "Enter the number of connected chips to win (number => #{@limitation_value})"
-    write_params @chips_to_win, @limitation_value
-    end
+    puts "Enter the width of the matrix (#{@limitation_value_min} <= number < = #{@limitation_value_max})"
+    @matrix_width = gets_valid_params @limitation_value_min, @limitation_value_max
+    puts @matrix_width
+    puts "Enter the height of the matrix (#{@limitation_value_min} <= number < = #{@limitation_value_max})"
+    @matrix_height = gets_valid_params @limitation_value_min, @limitation_value_max
+    puts @matrix_height
+    puts "Enter the number of connected chips to win (#{@limitation_value_min} <= number < = #{@matrix_width})"
+    @chips_to_win = gets_valid_params @limitation_value_min, @matrix_width
+    generate_params
   end
 
-  def write_params(params, valid)
+  def move(number)
+    return @arr2[number] << 'x' unless (@step % 2).zero?
+    @arr2[number] << 'o'
+  end
+
+  private
+
+  # takes parameters from the user and checks them for validity
+  # after which it returns value parameters
+  def gets_valid_params(valid1, valid2)
     loop do
       number = gets.to_i
-      if number < valid
-        puts "Enter valid number (number => #{@limitation_value})"
+      if number < valid1 || number > valid2
+        puts 'Enter valid number'
         redo
       end
-      params = number
-      break
+      return number
     end
   end
 
   def generate_params
-    # generate value for include_chip method
+    # generate value for method include_chip?
     @value1 = 'x' * @chips_to_win
     @value2 = 'o' * @chips_to_win
-    # generate value for to enable validation
+    # generate value for enable method validation_vertical ...
     @switch = @chips_to_win * 2 - 1
     (0..@chips_to_win).each { |value| @switch_diagonal += value }
   end
@@ -111,18 +120,6 @@ class Game #:nodoc:
     false
   end
 
-  def move(number)
-    return @arr2[number] << 'x' unless (@turn % 2).zero?
-    @arr2[number] << 'o'
-  end
-
-  def current_player_win?
-  end
-
-  def output_wo_win
-    puts @wo_won
-  end
-
   def output_arr
     (0..5).to_a.reverse.each do |key|
       print '|'
@@ -133,54 +130,4 @@ class Game #:nodoc:
 end
 
 game = Game.new
-turn = 0
-arr = [0, 0, 0, 0, 0, 0, 0]
-loop do
-  if (turn % 2).zero?
-    puts 'Second player makes a move'
-  else
-    puts 'First player makes a move'
-  end
-  puts 'Enter number of the column(from 1 to 7)'
-  number = gets.to_i
-  if number < 1 || number > 7
-    puts 'Enter a valid number'
-    redo
-  else
-    if arr[number - 1] == 6
-      puts 'Column is full, select another column'
-      redo
-    else
-      arr[number - 1] += 1
-    end
-  end
-  turn += 1
-  if turn == 43
-    puts 'Draw'
-    break
-  end
-  number += 2
-  game.move(number, turn)
-  if turn > 6
-    game.horizontal
-    game.vertical
-  end
-  if turn > 9 && turn < 15
-    game.diagonal_left (3..6),3
-    game.diagonal_right (6..9),3
-  end
-  if turn > 14 && turn < 20
-    game.diagonal_left (2..6),4
-    game.diagonal_right (6..10),4
-  end
-  if turn > 19
-    game.diagonal_left (1..6),5
-    game.diagonal_right (6..11), 5
-  end
-  puts turn
-  game.output_arr
-  if game.current_player_win?
-    game.output_wo_win
-    break
-  end
-end
+game.generate_game
