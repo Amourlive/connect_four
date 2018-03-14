@@ -43,7 +43,6 @@ class Game #:nodoc:
       end
       number += (@side_matrix_width - 1)
       write_to_matrix(number)
-      puts @switch_diagonal
       show_matrix
       if current_player_win?
         puts 'YOU WIN'
