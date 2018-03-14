@@ -37,17 +37,19 @@ class Game #:nodoc:
   def validation_horizontal?
     (3..9).each do |key|
       if @arr2[key].length > 3
-        break if include_chip? @arr2[key]
+        return true if include_chip? @arr2[key]
       end
     end
+    false
   end
 
   def validation_vertical?
     (3..9).each do |key|
       row = []
       (3..9).each { |key2| row << fill_cell(@arr2[key2][key], 'z') }
-      break if include_chip? row
+      return true if include_chip? row
     end
+    false
   end
 
   def validation_diagonal_left?(range, inspection_height)
