@@ -1,8 +1,6 @@
 class Game #:nodoc:
   def initialize
     @arr2 = []
-    @value1 = 'x'
-    @value2 = 'o'
     @step = 0
     @player_win = 0
     @matrix_length = 7
@@ -12,8 +10,12 @@ class Game #:nodoc:
   end
 
   def generate_params
-    @value1 *= @chips_to_win
-    @value2 *= @chips_to_win
+    # generate value for include_chip method
+    @value1 = 'x' * @chips_to_win
+    @value2 = 'o' * @chips_to_win
+    # generate value for to enable validation
+    @switch = @chips_to_win * 2 - 1
+    (0..@chips_to_win).each { |value| @switch_diagonal += value }
   end
 
   def include_chip?(arr)
