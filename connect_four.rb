@@ -74,6 +74,8 @@ class Game #:nodoc:
     cell
   end
 
+  # validation work if the number of moves is enough to win
+  # and the required number of chips can fit horizontal.
   def validation_horizontal?
     if @step > @switch && @matrix_height >= @chips_to_win
       (@side_matrix_width..@matrix_width + @side_matrix_width).each do |key|
@@ -85,6 +87,7 @@ class Game #:nodoc:
     false
   end
 
+  # validation work if the number of moves is enough to win
   def validation_vertical?
     if @step > @switch
       (0..@matrix_height).each do |key|
@@ -98,6 +101,8 @@ class Game #:nodoc:
     false
   end
 
+  # validation work if the number of moves is enough to win
+  # and the required number of chips can fit diagonally.
   def validation_diagonal?
     if @step > @switch_diagonal && @matrix_height >= @chips_to_win
       return true if validation_diagonal_left? || validation_diagonal_right?
@@ -106,7 +111,7 @@ class Game #:nodoc:
   end
 
   def validation_diagonal_left?
-    (@side_matrix_width..@matrix_width + @side_matrix_width).each do |index|
+    (0..@matrix_width + @side_matrix_width - @chips_to_win + 1).each do |index|
       diagonal = []
       (0..@matrix_height).each do |key|
         key2 = index + key
@@ -118,7 +123,7 @@ class Game #:nodoc:
   end
 
   def validation_diagonal_right?
-    (@side_matrix_width..@matrix_width + @side_matrix_width).to_a.reverse.each do |index|
+    (@side_matrix_width + @chips_to_win..@matrix_width + 2 * @side_matrix_width).to_a.reverse.each do |index|
       diagonal = []
       (0..@matrix_height).each do |key|
         key2 = index - key
@@ -129,10 +134,13 @@ class Game #:nodoc:
     false
   end
 
-  def output_arr
-    (0..5).to_a.reverse.each do |key|
+  # show matrix for user
+  def matrix
+    (0..@matrix_height).to_a.reverse.each do |key|
       print '|'
-      (3..9).each { |key2| print fill_cell(@arr2[key2][key], ' '), '|' }
+      (@side_matrix_width..@matrix_width + @side_matrix_width).each do |key2|
+        print fill_cell(@arr2[key2][key], ' '), '|'
+      end
       print "\n"
     end
   end
