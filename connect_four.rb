@@ -99,12 +99,13 @@ class Game #:nodoc:
         (0..@matrix_height).each { |key2| @matrix[key][key2] = 'z' }
       end
       (@side_matrix_width + 1..@side_matrix_width + @matrix_width).each { |key| @matrix[key] = [] }
-      (@side_matrix_width + @matrix_width + 1..@matrix_width + 2 * @side_matrix_width).each do |key|
+      (@side_matrix_width + @matrix_width + 1..@matrix_width + 2 * @side_matrix_width + 1).each do |key|
         @matrix[key] = []
         (0..@matrix_height).each { |key2| @matrix[key][key2] = 'z' }
       end
     end
     @arr = Array.new(@matrix_width, 0)
+    print @matrix
   end
 
   # checks if there is a necessary amount of chips inside the array
@@ -171,7 +172,7 @@ class Game #:nodoc:
   end
 
   def win_by_diagonal_right?
-    (@side_matrix_width + @chips_to_win..@matrix_width + 2 * @side_matrix_width).to_a.reverse.each do |index|
+    (@side_matrix_width + @chips_to_win..@matrix_width + 2 * @side_matrix_width + 1).to_a.reverse.each do |index|
       diagonal = []
       (0..@matrix_height - 1).each do |key|
         key2 = index - key
