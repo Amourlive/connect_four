@@ -24,9 +24,10 @@ class Game #:nodoc:
     generate_params
   end
 
-  def move(number)
-    return @matrix[number] << 'x' unless (@step % 2).zero?
-    @matrix[number] << 'o'
+  def move
+    loop do
+
+    end
   end
 
   private
@@ -42,6 +43,11 @@ class Game #:nodoc:
       end
       return number
     end
+  end
+
+  def write_to_matrix
+    return @matrix[number] << 'x' unless (@step % 2).zero?
+    @matrix[number] << 'o'
   end
 
   def generate_params
@@ -86,7 +92,7 @@ class Game #:nodoc:
 
   # validation work if the number of moves is enough to win
   # and the required number of chips can fit horizontal.
-  def validation_horizontal?
+  def win_by_horizontal?
     if @step > @switch && @matrix_height >= @chips_to_win
       (@side_matrix_width..@matrix_width + @side_matrix_width).each do |key|
         if @matrix[key].length >= @chips_to_win
@@ -98,7 +104,7 @@ class Game #:nodoc:
   end
 
   # validation work if the number of moves is enough to win
-  def validation_vertical?
+  def win_by_vertical?
     if @step > @switch
       (0..@matrix_height).each do |key|
         row = []
@@ -113,14 +119,14 @@ class Game #:nodoc:
 
   # validation work if the number of moves is enough to win
   # and the required number of chips can fit diagonally.
-  def validation_diagonal?
+  def win_by_diagonal?
     if @step > @switch_diagonal && @matrix_height >= @chips_to_win
-      return true if validation_diagonal_left? || validation_diagonal_right?
+      return true if win_by_diagonal_left? || win_by_diagonal_right?
     end
     false
   end
 
-  def validation_diagonal_left?
+  def win_by_diagonal_left?
     (0..@matrix_width + @side_matrix_width - @chips_to_win + 1).each do |index|
       diagonal = []
       (0..@matrix_height).each do |key|
@@ -132,7 +138,7 @@ class Game #:nodoc:
     false
   end
 
-  def validation_diagonal_right?
+  def win_by_diagonal_right?
     (@side_matrix_width + @chips_to_win..@matrix_width + 2 * @side_matrix_width).to_a.reverse.each do |index|
       diagonal = []
       (0..@matrix_height).each do |key|
@@ -144,8 +150,13 @@ class Game #:nodoc:
     false
   end
 
+  def current_player_win?
+    return true if win_by_horizontal? || win_by_vertical? || win_by_diagonal?
+    false
+  end
+
   # show matrix for user
-  def matrix
+  def show_matrix
     (0..@matrix_height).to_a.reverse.each do |key|
       print '|'
       (@side_matrix_width..@matrix_width + @side_matrix_width).each do |key2|
