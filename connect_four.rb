@@ -1,24 +1,19 @@
 class Game #:nodoc:
   def initialize
-    @arr2 = [['z','z','z','z','z','z'],
-             ['z','z','z','z','z','z'],
-             ['z','z','z','z','z','z'],
-             [], [], [], [], [], [], [],
-             ['z','z','z','z','z','z'],
-             ['z','z','z','z','z','z'],
-             ['z','z','z','z','z','z']]
+    @arr2 = []
     @value1 = 'x'
     @value2 = 'o'
-    @turn = 0
+    @step = 0
     @player_win = 0
     @matrix_length = 7
     @matrix_height = 6
+    @side_matrix_length = 3
     @chips_to_win = 4
   end
 
-  def generate_value
-    @value1 *= 4
-    @value2 *= 4
+  def generate_params
+    @value1 *= @chips_to_win
+    @value2 *= @chips_to_win
   end
 
   def include_chip?(arr)
@@ -44,7 +39,7 @@ class Game #:nodoc:
   end
 
   def validation_horizontal?
-    if @turn > 6
+    if @step > 6
       (3..9).each do |key|
         if @arr2[key].length > 3
           return true if include_chip? @arr2[key]
@@ -55,7 +50,7 @@ class Game #:nodoc:
   end
 
   def validation_vertical?
-    if @turn > 6
+    if @step > 6
       (3..9).each do |key|
         row = []
         (3..9).each { |key2| row << fill_cell(@arr2[key2][key], 'z') }
