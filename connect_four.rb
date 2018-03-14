@@ -9,16 +9,18 @@ class Game #:nodoc:
              ['z','z','z','z','z','z']]
     @value1 = 'xxxx'
     @value2 = 'oooo'
-    @wo_won = ''
+    @player_win = 0
   end
 
-  def win(arr)
+  def include_chip?(arr)
     if arr.join.include? @value1
-      @wo_won = 'The first player won'
+      @player_win = 1
       true
     elsif arr.join.include? @value2
-      @wo_won = 'The second player won'
+      @player_win = 2
       true
+    else
+      false
     end
   end
 
