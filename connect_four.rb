@@ -2,7 +2,6 @@ class Game #:nodoc:
   def initialize
     @matrix = []
     @step = 1
-    @player_win = 0
     @switch = 0
     @switch_diagonal = 0
     @arr = []
@@ -112,10 +111,8 @@ class Game #:nodoc:
   # checks if there is a necessary amount of chips inside the array
   def include_chip?(arr)
     if arr.join.include? @value1
-      @player_win = 1
       true
     elsif arr.join.include? @value2
-      @player_win = 2
       true
     else
       false
