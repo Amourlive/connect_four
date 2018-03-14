@@ -12,7 +12,7 @@ class Game #:nodoc:
 
   # sets the conditions for the game, matrix size, validation conditions
   def generate_game
-    print "Enter the width of the matrix (#{@limitation_value_min} <= number < = #{@limitation_value_max})"
+    puts "Enter the width of the matrix (#{@limitation_value_min} <= number < = #{@limitation_value_max})"
     @matrix_width = gets_valid_params @limitation_value_min, @limitation_value_max
 
     puts "Enter the height of the matrix (#{@limitation_value_min} <= number < = #{@limitation_value_max})"
@@ -75,8 +75,8 @@ class Game #:nodoc:
   end
 
   def validation_horizontal?
-    if @step > @switch
-      (3..9).each do |key|
+    if @step > @switch && @matrix_height >= @chips_to_win
+      (@side_matrix_width..@matrix_width + @side_matrix_width).each do |key|
         if @arr2[key].length >= @chips_to_win
           return true if include_chip? @arr2[key]
         end
@@ -87,19 +87,28 @@ class Game #:nodoc:
 
   def validation_vertical?
     if @step > @switch
-      (3..9).each do |key|
+      (0..@matrix_height).each do |key|
         row = []
-        (3..9).each { |key2| row << fill_cell(@arr2[key2][key], 'z') }
+        (@side_matrix_width..@matrix_width + @side_matrix_width).each do |key2|
+          row << fill_cell(@arr2[key2][key], 'z')
+        end
         return true if include_chip? row
       end
     end
     false
   end
 
-  def validation_diagonal_left?(range, inspection_height)
-    range.each do |index|
+  def validation_diagonal?
+    if @step > @switch_diagonal && @matrix_height >= @chips_to_win
+      return true if validation_diagonal_left? || validation_diagonal_right?
+    end
+    false
+  end
+
+  def validation_diagonal_left?
+    (@side_matrix_width..@matrix_width + @side_matrix_width).each do |index|
       diagonal = []
-      (0..inspection_height).each do |key|
+      (0..@matrix_height).each do |key|
         key2 = index + key
         diagonal << fill_cell(@arr2[key2][key], 'z')
       end
@@ -108,10 +117,10 @@ class Game #:nodoc:
     false
   end
 
-  def validation_diagonal_right?(range, inspection_height)
-    range.to_a.reverse.each do |index|
+  def validation_diagonal_right?
+    (@side_matrix_width..@matrix_width + @side_matrix_width).to_a.reverse.each do |index|
       diagonal = []
-      (0..inspection_height).each do |key|
+      (0..@matrix_height).each do |key|
         key2 = index - key
         diagonal << fill_cell(@arr2[key2][key], 'z')
       end
