@@ -25,7 +25,7 @@ class Game #:nodoc:
 
   def move
     loop do
-      if @step == @matrix_height * @matrix_width
+      if @step > @matrix_height * @matrix_width
         puts 'Draw'
         break
       end
@@ -41,7 +41,7 @@ class Game #:nodoc:
         puts 'Your column is full, choose another one!'
         redo
       end
-      number += (@side_matrix_width - 1)
+      number += @side_matrix_width
       write_to_matrix(number)
       show_matrix
       if current_player_win?
@@ -94,12 +94,13 @@ class Game #:nodoc:
     if @side_matrix_width < 0
       @side_matrix_width = 0
     else
-      (0..@side_matrix_width - 1).each do |key|
+      @side_matrix_width -= 1
+      (0..@side_matrix_width).each do |key|
         @matrix[key] = []
         (0..@matrix_height).each { |key2| @matrix[key][key2] = 'z' }
       end
-      (@side_matrix_width..@side_matrix_width + @matrix_width - 1).each { |key| @matrix[key] = [] }
-      (@side_matrix_width + @matrix_width..@matrix_width + 2 * @side_matrix_width - 1).each do |key|
+      (@side_matrix_width + 1..@side_matrix_width + @matrix_width).each { |key| @matrix[key] = [] }
+      (@side_matrix_width + @matrix_width + 1..@matrix_width + 2 * @side_matrix_width).each do |key|
         @matrix[key] = []
         (0..@matrix_height).each { |key2| @matrix[key][key2] = 'z' }
       end
@@ -109,9 +110,9 @@ class Game #:nodoc:
 
   # checks if there is a necessary amount of chips inside the array
   def include_chip?(arr)
-    if arr.join.include? @value1
+    if arr.join.include? @value2
       true
-    elsif arr.join.include? @value2
+    elsif arr.join.include? @value1
       true
     else
       false
@@ -127,28 +128,26 @@ class Game #:nodoc:
   # validation work if the number of moves is enough to win
   # and the required number of chips can fit horizontal.
   def win_by_horizontal?
-    if @step > @switch && @matrix_height >= @chips_to_win
+    if @step >= @switch && @matrix_height >= @chips_to_win
       (@side_matrix_width..@matrix_width + @side_matrix_width).each do |key|
-        if @matrix[key].length >= @chips_to_win
-          return true if include_chip? @matrix[key]
-        end
+        return true if include_chip? @matrix[key]
       end
+      false
     end
-    false
   end
 
   # validation work if the number of moves is enough to win
   def win_by_vertical?
-    if @step > @switch
-      (0..@matrix_height).each do |key|
+    if @step >= @switch
+      (0..@matrix_height - 1).each do |key|
         row = []
-        (@side_matrix_width..@matrix_width + @side_matrix_width).each do |key2|
+        (@side_matrix_width + 1..@matrix_width + @side_matrix_width).each do |key2|
           row << fill_cell(@matrix[key2][key], 'z')
         end
         return true if include_chip? row
       end
+      false
     end
-    false
   end
 
   # validation work if the number of moves is enough to win
@@ -161,7 +160,7 @@ class Game #:nodoc:
   end
 
   def win_by_diagonal_left?
-    (0..@matrix_width + @side_matrix_width - @chips_to_win).each do |index|
+    (0..@matrix_width + @side_matrix_width - @chips_to_win + 1).each do |index|
       diagonal = []
       (0..@matrix_height - 1).each do |key|
         key2 = index + key
@@ -173,7 +172,7 @@ class Game #:nodoc:
   end
 
   def win_by_diagonal_right?
-    (@side_matrix_width + @chips_to_win - 1..@matrix_width + 2 * @side_matrix_width - 1).to_a.reverse.each do |index|
+    (@side_matrix_width + @chips_to_win..@matrix_width + 2 * @side_matrix_width).to_a.reverse.each do |index|
       diagonal = []
       (0..@matrix_height - 1).each do |key|
         key2 = index - key
@@ -193,13 +192,19 @@ class Game #:nodoc:
   def show_matrix
     (0..@matrix_height - 1).to_a.reverse.each do |key|
       print '|'
-      (@side_matrix_width..@matrix_width + @side_matrix_width - 1).each do |key2|
+      (@side_matrix_width + 1..@matrix_width + @side_matrix_width).each do |key2|
         print fill_cell(@matrix[key2][key], ' '), ' |'
       end
-      print "#{key}\n"
+      print " #{key}\n"
     end
     print '|'
-    (0..@matrix_width).each { |value| print value, '|' }
+    (01..@matrix_width).each do |value|
+      if value.to_s.length == 1
+        print "0#{value}|"
+      else
+        print value, '|'
+      end
+    end
     print "\n"
   end
 end
