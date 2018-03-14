@@ -22,9 +22,14 @@ class Game #:nodoc:
     end
   end
 
-  def empty?(arr)
-    return true if arr.nil?
+  def cell_empty?(cell)
+    return true if cell.nil?
     false
+  end
+
+  def fill_cell(cell, filler)
+    return filler if cell_empty?(cell)
+    cell
   end
 
   def horizontal
@@ -36,7 +41,7 @@ class Game #:nodoc:
   def vertical
     (3..9).each do |key|
       row = []
-      (3..9).each { |key2| row << filling_of_emptiness(@arr2[key2][key], 'z') }
+      (3..9).each { |key2| row << fill_cell(@arr2[key2][key], 'z') }
       win row
     end
   end
@@ -46,7 +51,7 @@ class Game #:nodoc:
       diagonal = []
       (0..n).each do |key|
         key2 = index + key
-        diagonal << filling_of_emptiness(@arr2[key2][key], 'z')
+        diagonal << fill_cell(@arr2[key2][key], 'z')
       end
       win diagonal
     end
@@ -57,7 +62,7 @@ class Game #:nodoc:
       diagonal = []
       (0..n).each do |key|
         key2 = index - key
-        diagonal << filling_of_emptiness(@arr2[key2][key], 'z')
+        diagonal << fill_cell(@arr2[key2][key], 'z')
       end
       win diagonal
     end
@@ -80,7 +85,7 @@ class Game #:nodoc:
   def output_arr
     (0..5).to_a.reverse.each do |key|
       print '|'
-      (3..9).each { |key2| print filling_of_emptiness(@arr2[key2][key], ' '), '|' }
+      (3..9).each { |key2| print fill_cell(@arr2[key2][key], ' '), '|' }
       print "\n"
     end
   end
