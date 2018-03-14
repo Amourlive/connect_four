@@ -12,14 +12,15 @@ class Game #:nodoc:
 
   # sets the conditions for the game, matrix size, validation conditions
   def generate_game
-    puts "Enter the width of the matrix (#{@limitation_value_min} <= number < = #{@limitation_value_max})"
+    print "Enter the width of the matrix (#{@limitation_value_min} <= number < = #{@limitation_value_max})"
     @matrix_width = gets_valid_params @limitation_value_min, @limitation_value_max
-    puts @matrix_width
+
     puts "Enter the height of the matrix (#{@limitation_value_min} <= number < = #{@limitation_value_max})"
     @matrix_height = gets_valid_params @limitation_value_min, @limitation_value_max
-    puts @matrix_height
+
     puts "Enter the number of connected chips to win (#{@limitation_value_min} <= number < = #{@matrix_width})"
     @chips_to_win = gets_valid_params @limitation_value_min, @matrix_width
+
     generate_params
   end
 
@@ -50,8 +51,11 @@ class Game #:nodoc:
     # generate value for enable method validation_vertical ...
     @switch = @chips_to_win * 2 - 1
     (0..@chips_to_win).each { |value| @switch_diagonal += value }
+    # generate value for side matrix
+    @side_matrix_width = @matrix_height - @chips_to_win
   end
 
+  # checks if there is a necessary amount of chips inside the array
   def include_chip?(arr)
     if arr.join.include? @value1
       @player_win = 1
@@ -75,9 +79,9 @@ class Game #:nodoc:
   end
 
   def validation_horizontal?
-    if @step > 6
+    if @step > @switch
       (3..9).each do |key|
-        if @arr2[key].length > 3
+        if @arr2[key].length >= @chips_to_win
           return true if include_chip? @arr2[key]
         end
       end
@@ -86,7 +90,7 @@ class Game #:nodoc:
   end
 
   def validation_vertical?
-    if @step > 6
+    if @step > @switch
       (3..9).each do |key|
         row = []
         (3..9).each { |key2| row << fill_cell(@arr2[key2][key], 'z') }
