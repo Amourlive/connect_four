@@ -68,13 +68,9 @@ class Game #:nodoc:
     end
   end
 
-  def cell_empty?(cell)
-    return true if cell.nil?
-    false
-  end
-
+  # return cell if not empty or filler
   def fill_cell(cell, filler)
-    return filler if cell_empty?(cell)
+    return filler if cell.nil?
     cell
   end
 
