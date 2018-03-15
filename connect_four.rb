@@ -1,8 +1,6 @@
 class Game #:nodoc:
   def initialize
     @step = 1
-    @switch = 0
-    @switch_diagonal = 0
     # Sets the matrix size constraint
     @limitation_value_min = 3
     @limitation_value_max = 100
@@ -57,7 +55,7 @@ class Game #:nodoc:
   def gets_valid_params(valid1, valid2)
     loop do
       number = gets.to_i
-      if number < valid1 || number > valid2
+      unless (valid1..valid2).cover?(number)
         puts 'Enter valid number'
         redo
       end
@@ -82,13 +80,13 @@ class Game #:nodoc:
     @value1 = 'x' * @chips_to_win
     @value2 = 'o' * @chips_to_win
 
-    # generate value for enable method validation_vertical ...
+    # generate value for enable method win_by_vertical ...
     @switch = @chips_to_win * 2 - 1
+    @switch_diagonal = 0
     (0..@chips_to_win).each { |value| @switch_diagonal += value }
 
     # generate value for side matrix
     @side_matrix_width = @matrix_height - @chips_to_win
-    puts @side_matrix_width
     if @side_matrix_width < 0
       @side_matrix_width = 0
     else
@@ -98,7 +96,6 @@ class Game #:nodoc:
       (@side_matrix_width + 1..@side_matrix_width + @matrix_width).each { |key| @matrix[key] = [] }
     end
     @arr = Array.new(@matrix_width, 0)
-    print @matrix
   end
 
   # checks if there is a necessary amount of chips inside the array
