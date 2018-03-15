@@ -1,3 +1,5 @@
+# Connect flour
+
 Console program for playing tic-tac-toe or connect flour
 
 To start the game run the file
