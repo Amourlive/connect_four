@@ -8,13 +8,13 @@ class Game #:nodoc:
 
   # sets the conditions for the game, matrix size, validation conditions
   def generate_game
-    puts "Enter the width of the matrix (#{@limitation_value_min} <= number < = #{@limitation_value_max})"
-    @matrix_width = gets_valid_params @limitation_value_min, @limitation_value_max
+    enter_the('width of the matrix')
+    @matrix_width = gets_valid_params
 
-    puts "Enter the height of the matrix (#{@limitation_value_min} <= number < = #{@limitation_value_max})"
-    @matrix_height = gets_valid_params @limitation_value_min, @limitation_value_max
+    enter_the('height of the matrix')
+    @matrix_height = gets_valid_params
 
-    puts "Enter the number of connected chips to win (#{@limitation_value_min} <= number < = #{@matrix_width})"
+    enter_the('number of connected chips to win', @limitation_value_min, @matrix_width)
     @chips_to_win = gets_valid_params @limitation_value_min, @matrix_width
     generate_params
   end
@@ -52,7 +52,12 @@ class Game #:nodoc:
 
   # takes parameters from the user and checks them for validity
   # after which it returns value parameters
-  def gets_valid_params(valid1, valid2)
+
+  def enter_the(value, valid1 = @limitation_value_min, valid2 = @limitation_value_max)
+    puts "Enter the #{value} (#{valid1} <= number < = #{valid2})"
+  end
+
+  def gets_valid_params(valid1 = @limitation_value_min, valid2 = @limitation_value_max)
     loop do
       number = gets.to_i
       unless (valid1..valid2).cover?(number)
