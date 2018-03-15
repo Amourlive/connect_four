@@ -127,8 +127,8 @@ class Game #:nodoc:
       (@side_matrix_width..@matrix_width + @side_matrix_width).each do |key|
         return true if include_chip? @matrix[key]
       end
-      false
     end
+    false
   end
 
   # validation work if the number of moves is enough to win
@@ -141,8 +141,8 @@ class Game #:nodoc:
         end
         return true if include_chip? row
       end
-      false
     end
+    false
   end
 
   # validation work if the number of moves is enough to win
