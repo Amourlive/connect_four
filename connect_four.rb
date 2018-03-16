@@ -1,9 +1,9 @@
 class Game #:nodoc:
+  MATRIX_SIZE_MIN = 3
+  MATRIX_SIZE_MAX = 100
   def initialize
     @step = 1
     # Sets the matrix size constraint
-    @limitation_value_min = 3
-    @limitation_value_max = 100
   end
 
   # sets the conditions for the game, matrix size, validation conditions
@@ -14,8 +14,8 @@ class Game #:nodoc:
     enter_the('height of the matrix')
     @matrix_height = gets_valid_params
 
-    enter_the('number of connected chips to win', @limitation_value_min, @matrix_width)
-    @chips_to_win = gets_valid_params @limitation_value_min, @matrix_width
+    enter_the('number of connected chips to win', MATRIX_SIZE_MIN, @matrix_width)
+    @chips_to_win = gets_valid_params MATRIX_SIZE_MIN, @matrix_width
     generate_params
   end
 
@@ -53,11 +53,11 @@ class Game #:nodoc:
   # takes parameters from the user and checks them for validity
   # after which it returns value parameters
 
-  def enter_the(value, valid1 = @limitation_value_min, valid2 = @limitation_value_max)
+  def enter_the(value, valid1 = MATRIX_SIZE_MIN, valid2 = MATRIX_SIZE_MAX)
     puts "Enter the #{value} (#{valid1} <= number < = #{valid2})"
   end
 
-  def gets_valid_params(valid1 = @limitation_value_min, valid2 = @limitation_value_max)
+  def gets_valid_params(valid1 = MATRIX_SIZE_MIN, valid2 = MATRIX_SIZE_MAX)
     loop do
       number = gets.to_i
       unless (valid1..valid2).cover?(number)
@@ -120,8 +120,9 @@ class Game #:nodoc:
     cell
   end
 
-  # validation work if the number of moves is enough to win
-  # and the required number of chips can fit horizontal.
+  # block with checks the fulfillment of the conditions of victory
+  ######################################################################
+
   def win_by_horizontal?
     if @step >= @switch && @matrix_height >= @chips_to_win
       (@side_matrix_width..@matrix_width + @side_matrix_width).each do |key|
@@ -131,7 +132,7 @@ class Game #:nodoc:
     false
   end
 
-  # validation work if the number of moves is enough to win
+  # checks the fulfillment of the conditions of victory
   def win_by_vertical?
     if @step >= @switch
       (0..@matrix_height - 1).each do |key|
@@ -145,8 +146,6 @@ class Game #:nodoc:
     false
   end
 
-  # validation work if the number of moves is enough to win
-  # and the required number of chips can fit diagonally.
   def win_by_diagonal?
     if @step >= @switch_diagonal && @matrix_height >= @chips_to_win
       return true if win_by_diagonal_left? || win_by_diagonal_right?
@@ -181,6 +180,8 @@ class Game #:nodoc:
   def current_player_win?
     win_by_horizontal? || win_by_vertical? || win_by_diagonal?
   end
+
+  ######################################################################
 
   # show matrix for user
   def show_matrix
