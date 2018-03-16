@@ -1,7 +1,7 @@
 class Game #:nodoc:
   # Sets the matrix size constraint
   MATRIX_SIZE_MIN = 3
-  MATRIX_SIZE_MAX = 100
+  MATRIX_SIZE_MAX = 65
   def initialize
     @step = 1
   end
@@ -101,6 +101,8 @@ class Game #:nodoc:
       (@side_matrix_width + 1..@side_matrix_width + @matrix_width).each { |key| @matrix[key] = [] }
     end
     @arr = Array.new(@matrix_width, 0)
+    # generate value for show_matrix
+    @cell_size = @matrix_width.to_s.length
   end
 
   # checks if there is a necessary amount of chips inside the array
@@ -188,17 +190,13 @@ class Game #:nodoc:
     (0..@matrix_height - 1).to_a.reverse.each do |key|
       print '|'
       (@side_matrix_width + 1..@matrix_width + @side_matrix_width).each do |key2|
-        print fill_cell(@matrix[key2][key], ' '), ' |'
+        print format("%#{@cell_size}s",@matrix[key2][key]), '|'
       end
       print " #{key}\n"
     end
-    print '|'
-    (01..@matrix_width).each do |value|
-      if value.to_s.length == 1
-        print "0#{value}|"
-      else
-        print value, '|'
-      end
+    printf '|'
+    (1..@matrix_width).each do |value|
+      print format("%#{@cell_size}i|", value)
     end
     print "\n"
   end
