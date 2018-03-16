@@ -4,18 +4,25 @@ class Game #:nodoc:
   MATRIX_SIZE_MAX = 65
   def initialize
     @step = 1
+    @matrix_width = 6
+    @matrix_height = 7
+    @chips_to_win = 4
   end
 
   # sets the conditions for the game, matrix size, validation conditions
   def generate_game
-    enter_the('width of the matrix')
-    @matrix_width = gets_valid_params
+    puts 'Use the default settings? (y/n)'
+    setting = gets.chomp
+    if setting == 'n'
+      enter_the('width of the matrix')
+      @matrix_width = gets_valid_params
 
-    enter_the('height of the matrix')
-    @matrix_height = gets_valid_params
+      enter_the('height of the matrix')
+      @matrix_height = gets_valid_params
 
-    enter_the('number of connected chips to win', MATRIX_SIZE_MIN, @matrix_width)
-    @chips_to_win = gets_valid_params MATRIX_SIZE_MIN, @matrix_width
+      enter_the('number of connected chips to win', MATRIX_SIZE_MIN, @matrix_width)
+      @chips_to_win = gets_valid_params MATRIX_SIZE_MIN, @matrix_width
+    end
     generate_params
   end
 
@@ -97,7 +104,7 @@ class Game #:nodoc:
     else
       @side_matrix_width -= 1
       arr_z = Array.new(@matrix_height, 'z')
-      @matrix = Array.new(@matrix_width + 2 * @side_matrix_width + 1, arr_z)
+      @matrix = Array.new(@matrix_width + 2 * @side_matrix_width + 2, arr_z)
       (@side_matrix_width + 1..@side_matrix_width + @matrix_width).each { |key| @matrix[key] = [] }
     end
     @arr = Array.new(@matrix_width, 0)
