@@ -1,9 +1,9 @@
 class Game #:nodoc:
+  # Sets the matrix size constraint
   MATRIX_SIZE_MIN = 3
   MATRIX_SIZE_MAX = 100
   def initialize
     @step = 1
-    # Sets the matrix size constraint
   end
 
   # sets the conditions for the game, matrix size, validation conditions
