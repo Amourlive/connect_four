@@ -177,8 +177,8 @@ class Game #:nodoc:
 
   def current_player_win?
     win_by_horizontal? || win_by_vertical? ||
-      win_by_diagonal?(@range_side_left) { index + key } ||
-      win_by_diagonal?(@range_side_right) { index - key }
+      win_by_diagonal?(@range_side_left) { |index, key| index + key } ||
+      win_by_diagonal?(@range_side_right) { |index, key| index - key }
   end
 
   ######################################################################
