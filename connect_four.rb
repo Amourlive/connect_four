@@ -2,11 +2,12 @@ class Game #:nodoc:
   # Sets the matrix size constraint
   MATRIX_SIZE_MIN = 3
   MATRIX_SIZE_MAX = 65
+  # Standard setting
+  MATRIX_WIDTH = 6
+  MATRIX_HEIGHT = 7
+  CHIPS_TO_WIN = 4
   def initialize
     @step = 1
-    @matrix_width = 6
-    @matrix_height = 7
-    @chips_to_win = 4
   end
 
   # sets the conditions for the game, matrix size, validation conditions
@@ -16,12 +17,14 @@ class Game #:nodoc:
     if setting == 'n'
       enter_the('width of the matrix')
       @matrix_width = gets_valid_params
-
       enter_the('height of the matrix')
       @matrix_height = gets_valid_params
-
       enter_the('number of connected chips to win', MATRIX_SIZE_MIN, @matrix_width)
       @chips_to_win = gets_valid_params MATRIX_SIZE_MIN, @matrix_width
+    else
+      @matrix_width = MATRIX_WIDTH
+      @matrix_height = MATRIX_HEIGHT
+      @chips_to_win =  CHIPS_TO_WIN
     end
     generate_params
   end
@@ -91,25 +94,28 @@ class Game #:nodoc:
     # generate value for method include_chip?
     @value1 = 'x' * @chips_to_win
     @value2 = 'o' * @chips_to_win
-
-    # generate value for enable method win_by_vertical ...
-    @switch = @chips_to_win * 2 - 1
-    @switch_diagonal = 0
-    (0..@chips_to_win).each { |value| @switch_diagonal += value }
-
-    # generate value for side matrix
+    # generate value for matrix
     @side_matrix_width = @matrix_height - @chips_to_win
     if @side_matrix_width < 0
       @side_matrix_width = 0
     else
       @side_matrix_width -= 1
-      arr_z = Array.new(@matrix_height, 'z')
-      @matrix = Array.new(@matrix_width + 2 * @side_matrix_width + 2, arr_z)
-      (@side_matrix_width + 1..@side_matrix_width + @matrix_width).each { |key| @matrix[key] = [] }
     end
+    @range_visible_width = (@side_matrix_width + 1..@side_matrix_width + @matrix_width)
+    @range_height_matrix = (0..@matrix_height - 1)
+    # generate matrix
+    arr_z = Array.new(@matrix_height, 'z')
+    @matrix = Array.new(@matrix_width + 2 * @side_matrix_width + 2, arr_z)
+    @range_visible_width.each { |key| @matrix[key] = [] }
     @arr = Array.new(@matrix_width, 0)
-    # generate value for show_matrix
+    # generate value for show_matrix (use in .format)
     @cell_size = @matrix_width.to_s.length
+    # generate value for enable method win_by_vertical ...
+    @switch = @chips_to_win * 2 - 1
+    @switch_diagonal = 0
+    (0..@chips_to_win).each { |value| @switch_diagonal += value }
+    @range_side_left = (0..@matrix_width + @side_matrix_width - @chips_to_win + 1)
+    @range_side_right = (@side_matrix_width + @chips_to_win..@matrix_width + 2 * @side_matrix_width + 1).to_a.reverse
   end
 
   # checks if there is a necessary amount of chips inside the array
@@ -134,7 +140,7 @@ class Game #:nodoc:
 
   def win_by_horizontal?
     if @step >= @switch && @matrix_height >= @chips_to_win
-      (@side_matrix_width..@matrix_width + @side_matrix_width).each do |key|
+      @range_visible_width.each do |key|
         return true if include_chip? @matrix[key]
       end
     end
@@ -144,9 +150,9 @@ class Game #:nodoc:
   # checks the fulfillment of the conditions of victory
   def win_by_vertical?
     if @step >= @switch
-      (0..@matrix_height - 1).each do |key|
+      @range_height_matrix.each do |key|
         row = []
-        (@side_matrix_width + 1..@matrix_width + @side_matrix_width).each do |key2|
+        @range_visible_width.each do |key2|
           row << fill_cell(@matrix[key2][key], 'z')
         end
         return true if include_chip? row
@@ -155,55 +161,40 @@ class Game #:nodoc:
     false
   end
 
-  def win_by_diagonal?
+  def win_by_diagonal?(range)
     if @step >= @switch_diagonal && @matrix_height >= @chips_to_win
-      return true if win_by_diagonal_left? || win_by_diagonal_right?
-    end
-    false
-  end
-
-  def win_by_diagonal_left?
-    (0..@matrix_width + @side_matrix_width - @chips_to_win + 1).each do |index|
-      diagonal = []
-      (0..@matrix_height - 1).each do |key|
-        key2 = index + key
-        diagonal << fill_cell(@matrix[key2][key], 'z')
+      range.each do |index|
+        diagonal = []
+        @range_height_matrix.each do |key|
+          key2 = yield(index, key)
+          diagonal << fill_cell(@matrix[key2][key], 'z')
+        end
+        return true if include_chip? diagonal
       end
-      return true if include_chip? diagonal
-    end
-    false
-  end
-
-  def win_by_diagonal_right?
-    (@side_matrix_width + @chips_to_win..@matrix_width + 2 * @side_matrix_width + 1).to_a.reverse.each do |index|
-      diagonal = []
-      (0..@matrix_height - 1).each do |key|
-        key2 = index - key
-        diagonal << fill_cell(@matrix[key2][key], 'z')
-      end
-      return true if include_chip? diagonal
     end
     false
   end
 
   def current_player_win?
-    win_by_horizontal? || win_by_vertical? || win_by_diagonal?
+    win_by_horizontal? || win_by_vertical? ||
+      win_by_diagonal?(@range_side_left) { index + key } ||
+      win_by_diagonal?(@range_side_right) { index - key }
   end
 
   ######################################################################
 
   # show matrix for user
   def show_matrix
-    (0..@matrix_height - 1).to_a.reverse.each do |key|
+    @range_height_matrix.to_a.reverse.each do |key|
       print '|'
-      (@side_matrix_width + 1..@matrix_width + @side_matrix_width).each do |key2|
-        print format("%#{@cell_size}s",@matrix[key2][key]), '|'
+      @range_visible_width.each do |key2|
+        print format("%#{@cell_size}s", @matrix[key2][key]), '|'
       end
       print " #{key}\n"
     end
     printf '|'
-    (1..@matrix_width).each do |value|
-      print format("%#{@cell_size}i|", value)
+    @matrix.each_index do |index|
+      print format("%#{@cell_size}i|", index + 1)
     end
     print "\n"
   end
