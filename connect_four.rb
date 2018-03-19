@@ -1,5 +1,4 @@
 class Game #:nodoc:
-  # Sets the matrix size constraint
 
   OPTIONS = { matrix_min_size: 3,
               matrix_max_size: 65,
@@ -15,7 +14,6 @@ class Game #:nodoc:
     @step = 1
   end
 
-  # sets the conditions for the game, matrix size, validation conditions
   def game_setup
     puts 'Use the default settings? (y - yes/n - no)'
     setting = gets.chomp
