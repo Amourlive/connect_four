@@ -129,12 +129,6 @@ class Game #:nodoc:
     end
   end
 
-  # return cell if not empty or filler
-  def fill_cell(cell, filler)
-    return filler if cell.nil?
-    cell
-  end
-
   # block with checks the fulfillment of the conditions of victory
   ######################################################################
 
@@ -153,7 +147,7 @@ class Game #:nodoc:
       @range_height_matrix.each do |key|
         row = []
         @range_visible_width.each do |key2|
-          row << fill_cell(@matrix[key2][key], 'z')
+          row << @matrix[key2][key] || 'z'
         end
         return true if include_chip? row
       end
@@ -167,7 +161,7 @@ class Game #:nodoc:
         diagonal = []
         @range_height_matrix.each do |key|
           key2 = yield(index, key)
-          diagonal << fill_cell(@matrix[key2][key], 'z')
+          diagonal << @matrix[key2][key] || 'z'
         end
         return true if include_chip? diagonal
       end
