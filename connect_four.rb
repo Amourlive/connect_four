@@ -96,7 +96,6 @@ class Game #:nodoc:
     @value2 = 'o' * @chips_to_win
     # generate value for matrix
     @side_matrix_width = @matrix_height - @chips_to_win
-    p @side_matrix_width
     @side_matrix_width = 0 if @side_matrix_width < 0
     @range_visible_width = (@side_matrix_width..@side_matrix_width + @matrix_width - 1)
     @range_height_matrix = (0..@matrix_height - 1)
@@ -108,7 +107,6 @@ class Game #:nodoc:
     else
       @matrix = Array.new(@matrix_width, [])
     end
-    p @matrix
     @arr = Array.new(@matrix_width, 0)
     # generate value for show_matrix (use in .format)
     @cell_size = @matrix_width.to_s.length
