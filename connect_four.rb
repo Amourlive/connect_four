@@ -47,7 +47,7 @@ class Game #:nodoc:
         puts 'Your column is full, choose another one!'
         redo
       end
-      number += @side_matrix_width
+      number += @side_matrix_width - 1
       write_to_matrix(number)
       show_matrix
       if current_player_win?
@@ -96,17 +96,19 @@ class Game #:nodoc:
     @value2 = 'o' * @chips_to_win
     # generate value for matrix
     @side_matrix_width = @matrix_height - @chips_to_win
-    if @side_matrix_width < 0
-      @side_matrix_width = 0
-    else
-      @side_matrix_width -= 1
-    end
-    @range_visible_width = (@side_matrix_width + 1..@side_matrix_width + @matrix_width)
+    p @side_matrix_width
+    @side_matrix_width = 0 if @side_matrix_width < 0
+    @range_visible_width = (@side_matrix_width..@side_matrix_width + @matrix_width - 1)
     @range_height_matrix = (0..@matrix_height - 1)
     # generate matrix
-    arr_z = Array.new(@matrix_height, 'z')
-    @matrix = Array.new(@matrix_width + 2 * @side_matrix_width + 2, arr_z)
-    @range_visible_width.each { |key| @matrix[key] = [] }
+    if @side_matrix_width == 0
+      arr_z = Array.new(@matrix_height, 'z')
+      @matrix = Array.new(@matrix_width + 2 * @side_matrix_width, arr_z)
+      @range_visible_width.each { |key| @matrix[key] = [] }
+    else
+      @matrix = Array.new(@matrix_width, [])
+    end
+    p @matrix
     @arr = Array.new(@matrix_width, 0)
     # generate value for show_matrix (use in .format)
     @cell_size = @matrix_width.to_s.length
@@ -114,8 +116,8 @@ class Game #:nodoc:
     @switch = @chips_to_win * 2 - 1
     @switch_diagonal = 0
     (0..@chips_to_win).each { |value| @switch_diagonal += value }
-    @range_side_left = (0..@matrix_width + @side_matrix_width - @chips_to_win + 1)
-    @range_side_right = (@side_matrix_width + @chips_to_win..@matrix_width + 2 * @side_matrix_width + 1).to_a.reverse
+    @range_side_left = (0..@matrix_width + @side_matrix_width - @chips_to_win)
+    @range_side_right = (@side_matrix_width - 1 + @chips_to_win..@matrix_width - 1 + 2 * @side_matrix_width).to_a.reverse
   end
 
   # checks if there is a necessary amount of chips inside the array
@@ -187,8 +189,8 @@ class Game #:nodoc:
       print " #{key}\n"
     end
     printf '|'
-    @matrix.each_index do |index|
-      print format("%#{@cell_size}i|", index + 1)
+    (1..@matrix_width).each do |index|
+      print format("%#{@cell_size}i|", index)
     end
     print "\n"
   end
