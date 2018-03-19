@@ -96,7 +96,7 @@ class Game #:nodoc:
       @range_visible_matrix[:width].each { |key| @matrix[key] = [] }
     end
     @range_diagonal_check = { left: (0..matrix_width + side_matrix_width - number_of_connection),
-                              reight: (side_matrix_width - 1 + number_of_connection..matrix_width - 1 + 2 * side_matrix_width).to_a.reverse }
+                              right: (side_matrix_width - 1 + number_of_connection..matrix_width - 1 + 2 * side_matrix_width).to_a.reverse }
   end
 
   def win_by_horizontal?
@@ -132,7 +132,7 @@ class Game #:nodoc:
   def current_player_win?
     win_by_horizontal? || win_by_vertical? ||
       win_by_diagonal?(@range_diagonal_check[:left]) { |index, key| index + key } ||
-      win_by_diagonal?(@range_diagonal_check[:reight]) { |index, key| index - key }
+      win_by_diagonal?(@range_diagonal_check[:right]) { |index, key| index - key }
   end
 
   def show_matrix
