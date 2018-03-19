@@ -70,7 +70,7 @@ class Game #:nodoc:
   def gets_valid_params(valid1 = MATRIX_SIZE_MIN, valid2 = MATRIX_SIZE_MAX)
     loop do
       number = gets.to_i
-      unless (valid1..valid2).cover?(number)
+      unless number.between?(valid1, valid2)
         puts 'Enter valid number'
         redo
       end
@@ -100,12 +100,12 @@ class Game #:nodoc:
     @range_visible_width = (@side_matrix_width..@side_matrix_width + @matrix_width - 1)
     @range_height_matrix = (0..@matrix_height - 1)
     # generate matrix
-    if @side_matrix_width == 0
+    if @side_matrix_width.zero?
+      @matrix = Array.new(@matrix_width, [])
+    else
       arr_z = Array.new(@matrix_height, 'z')
       @matrix = Array.new(@matrix_width + 2 * @side_matrix_width, arr_z)
       @range_visible_width.each { |key| @matrix[key] = [] }
-    else
-      @matrix = Array.new(@matrix_width, [])
     end
     @arr = Array.new(@matrix_width, 0)
     # generate value for show_matrix (use in .format)
