@@ -11,7 +11,7 @@ class Game #:nodoc:
   end
 
   # sets the conditions for the game, matrix size, validation conditions
-  def generate_game
+  def game_setup
     puts 'Use the default settings? (y/n)'
     setting = gets.chomp
     if setting == 'n'
@@ -195,5 +195,5 @@ class Game #:nodoc:
 end
 
 game = Game.new
-game.generate_game
+game.game_setup
 game.move
