@@ -103,7 +103,7 @@ class Game #:nodoc:
       @range_visible_matrix[:width].each do |key2|
         row << @matrix[key2][key]
       end
-      @range_visible_matrix[:width].each { |key| @reference.each { |reference| return true if row.join.include? reference }}
+      @reference.each { |reference| return true if row.join.include? reference }
     end
     false
   end
@@ -122,7 +122,7 @@ class Game #:nodoc:
         key2 = yield(index, key)
         diagonal << (@matrix[key2][key] || 'z')
       end
-      @range_visible_matrix[:width].each { |key| @reference.each { |reference| return true if diagonal.join.include? reference }}
+      @reference.each { |reference| return true if diagonal.join.include? reference }
     end
     false
   end
