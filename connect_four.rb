@@ -99,10 +99,7 @@ class Game #:nodoc:
 
   def win_by_horizontal?
     @range_visible_matrix[:height].each do |key|
-      row = []
-      @range_visible_matrix[:width].each do |key2|
-        row << @matrix[key2][key]
-      end
+      row = @range_visible_matrix[:width].map { |key2| @matrix[key2][key] }
       @reference.each { |reference| return true if row.join.include? reference }
     end
     false
@@ -117,10 +114,9 @@ class Game #:nodoc:
   def win_by_diagonal?(range)
     return false unless @option[:diagonal_check_switch]
     range.each do |index|
-      diagonal = []
-      @range_visible_matrix[:height].each do |key|
+      diagonal = @range_visible_matrix[:height].map do |key|
         key2 = yield(index, key)
-        diagonal << (@matrix[key2][key] || 'z')
+        (@matrix[key2][key] || 'z')
       end
       @reference.each { |reference| return true if diagonal.join.include? reference }
     end
