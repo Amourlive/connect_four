@@ -66,7 +66,7 @@ class Game #:nodoc:
   end
 
   def write_to_column(number)
-    return nil if @option[:counter][number] == @option[:column_size]
+    return nil if @option[:counter][number - 1] == @option[:column_size]
     @option[:counter][number - 1] += 1
     return @matrix[number + @option[:side_matrix_width] - 1] << 'o' if (@step % 2).zero?
     @matrix[number + @option[:side_matrix_width] - 1] << 'x'
